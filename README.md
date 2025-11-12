@@ -6,3 +6,6 @@ ETH Price Watch + Paper Trades
     - TypeScript
 - **Backend:** Python (FastAPI)
 - **Storage:** SQLite
+
+# Dockerized Version
+in case of inconsistencies, (dockerized version)[https://github.com/itssfsam/kairon-test-dockerized] is also available
