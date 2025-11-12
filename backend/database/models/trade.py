@@ -6,7 +6,7 @@ class Trade(Base):
     __tablename__ = "trades"
 
     id = Column(Integer, primary_key=True, index=True)
-    side = Column(String, nullable=False)  # BUY or SELL
+    side = Column(String, nullable=False)
     amount = Column(Float, nullable=False)
     price = Column(Float, nullable=False)
     notional = Column(Float, nullable=False)
