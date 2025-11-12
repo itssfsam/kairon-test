@@ -1,6 +1,6 @@
 from fastapi.middleware.cors import CORSMiddleware
 import requests
-from database import init_db, SessionLocal, Balance, Trade
+from database import SessionLocal, init_db, Balance, Trade
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import datetime
