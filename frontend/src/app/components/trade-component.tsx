@@ -1,41 +1,61 @@
 "use client";
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DownloadTradesButton from "./download-trades-button";
 
 interface TradeBlockProps {
   apiUrl?: string;
 }
 
+interface Trade {
+  id: string;
+  side: "BUY" | "SELL";
+  amount: number;
+  timestamp: string;
+}
+
 export default function TradeBlock({ apiUrl = "http://localhost:8000/trade" }: TradeBlockProps) {
   const [amount, setAmount] = useState<string>(() => {
-    return localStorage.getItem("amount") || "";
+    try {
+      return localStorage.getItem("amount") || "";
+    } catch {
+      return "";
+    }
   });
 
   const [error, setError] = useState<string | null>(() => {
-    return localStorage.getItem("error") || null;
+    try {
+      return localStorage.getItem("error") || null;
+    } catch {
+      return null;
+    }
   });
 
   const [balance, setBalance] = useState<{ usdc: number; eth: number }>(() => {
-    const saved = localStorage.getItem("balance");
-    return saved ? JSON.parse(saved) : { usdc: 10000, eth: 0 };
+    try {
+      const saved = localStorage.getItem("balance");
+      return saved ? JSON.parse(saved) : { usdc: 10000, eth: 0 };
+    } catch {
+      return { usdc: 10000, eth: 0 };
+    }
   });
 
-  useEffect(() => {
-    localStorage.setItem("amount", amount);
-  }, [amount]);
-
-  useEffect(() => {
-    if (error === null) {
-      localStorage.removeItem("error");
-    } else {
-      localStorage.setItem("error", error);
+  const [trades, setTrades] = useState<Trade[]>(() => {
+    try {
+      const saved = localStorage.getItem("trades");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
     }
-  }, [error]);
+  });
 
+  // Persist states to localStorage
+  useEffect(() => localStorage.setItem("amount", amount), [amount]);
   useEffect(() => {
-    localStorage.setItem("balance", JSON.stringify(balance));
-  }, [balance]);
+    if (error === null) localStorage.removeItem("error");
+    else localStorage.setItem("error", error);
+  }, [error]);
+  useEffect(() => localStorage.setItem("balance", JSON.stringify(balance)), [balance]);
+  useEffect(() => localStorage.setItem("trades", JSON.stringify(trades)), [trades]);
 
   const handleTrade = async (side: "BUY" | "SELL") => {
     const num = parseFloat(amount);
@@ -50,7 +70,6 @@ export default function TradeBlock({ apiUrl = "http://localhost:8000/trade" }: T
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ side, amount: num }),
       });
-
       const data = await res.json();
 
       if (!res.ok) {
@@ -59,6 +78,15 @@ export default function TradeBlock({ apiUrl = "http://localhost:8000/trade" }: T
         setBalance(data.balance);
         setAmount("");
         setError(null);
+
+        // Add new trade at the top
+        const newTrade: Trade = {
+          id: Date.now().toString(),
+          side,
+          amount: num,
+          timestamp: new Date().toISOString(),
+        };
+        setTrades([newTrade, ...trades]);
       }
     } catch (err) {
       setError("Network error");
@@ -67,9 +95,9 @@ export default function TradeBlock({ apiUrl = "http://localhost:8000/trade" }: T
 
   return (
     <React.Fragment>
-      <div className="p-4 bg-white shadow rounded w-full max-w-md mx-auto">
+      {/* Trade Form */}
+      <div className="p-4 bg-white shadow rounded w-full max-w-md mx-auto mb-4">
         <h2 className="text-lg font-semibold mb-2">Trade</h2>
-
         {error && <p className="text-red-500 text-sm mb-1">{error}</p>}
 
         <div className="flex rounded overflow-hidden border border-gray-300 focus-within:ring-2 focus-within:ring-blue-500">
@@ -84,31 +112,54 @@ export default function TradeBlock({ apiUrl = "http://localhost:8000/trade" }: T
           />
           <button
             onClick={() => handleTrade("BUY")}
-            className="bg-purple-500 text-white px-4 py-2 text-sm hover:bg-purple-600 transition-colors transition-all duration-500
-          hover:bg-gradient-to-r hover:from-pink-500 hover:via-purple-500 hover:to-indigo-500
-          hover:bg-white/20 hover:backdrop-blur-lg hover:shadow-lg hover:text-center"
+            className="bg-purple-500 text-white px-4 py-2 text-sm hover:bg-purple-600 transition-all duration-300"
           >
             Buy
           </button>
           <button
             onClick={() => handleTrade("SELL")}
-            className="bg-pink-500 text-white px-4 py-2 text-sm hover:bg-pink-600 transition-colors transition-all duration-500
-          hover:bg-gradient-to-r hover:from-pink-500 hover:via-purple-500 hover:to-indigo-500
-          hover:bg-white/20 hover:backdrop-blur-lg hover:shadow-lg hover:text-center"
+            className="bg-pink-500 text-white px-4 py-2 text-sm hover:bg-pink-600 transition-all duration-300"
           >
             Sell
           </button>
         </div>
       </div>
-      <div className="p-4 bg-white shadow rounded">
+
+      {/* Balances */}
+      <div className="p-4 bg-white shadow rounded w-full max-w-md mx-auto mb-4">
         <h2 className="text-lg font-semibold mb-2">Balances</h2>
         <p>USDC: ${balance.usdc.toFixed(2)}</p>
         <p>ETH: {balance.eth.toFixed(4)}</p>
       </div>
-      <div className="p-4 bg-white shadow rounded">
+
+      {/* Trade History */}
+      <div className="p-4 bg-white shadow rounded w-full max-w-md mx-auto">
         <h2 className="text-lg font-semibold mb-2">Trade History</h2>
-        <p className="text-gray-500 italic">No trades yet</p>
-        <DownloadTradesButton />
+        {trades.length === 0 ? (
+          <p className="text-gray-500 italic">No trades yet</p>
+        ) : (
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr>
+                <th className="border-b py-2">Side</th>
+                <th className="border-b py-2">Amount</th>
+                <th className="border-b py-2">Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {trades.map((trade, idx) => (
+                <tr key={trade.id} className={idx % 2 === 0 ? "bg-gray-100" : ""}>
+                  <td className="py-1 px-2">{trade.side}</td>
+                  <td className="py-1 px-2">{trade.amount.toFixed(4)}</td>
+                  <td className="py-1 px-2">{new Date(trade.timestamp).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        <div className="mt-2">
+          <DownloadTradesButton />
+        </div>
       </div>
     </React.Fragment>
   );
