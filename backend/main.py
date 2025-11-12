@@ -1,9 +1,9 @@
 from fastapi.middleware.cors import CORSMiddleware
-import requests
 from database import SessionLocal, init_db, Balance, Trade
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import datetime
+from services import get_eth_price
 
 class TradeRequest(BaseModel):
     side: str
@@ -26,34 +26,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-COINGECKO_API = "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
-
-def get_eth_price_service() -> float:
-    try:
-        resp = requests.get(COINGECKO_API, timeout=5)
-        resp.raise_for_status()
-        data = resp.json()
-
-        if "ethereum" not in data or "usd" not in data["ethereum"]:
-            raise ValueError("Malformed response")
-
-        return float(data["ethereum"]["usd"])
-    except requests.RequestException as e:
-        # Network issues, timeout, bad status codes
-        raise HTTPException(status_code=503, detail=f"Price service unavailable: {e}")
-    except ValueError as e:
-        # JSON parsing or missing keys
-        raise HTTPException(status_code=502, detail=f"Invalid price data: {e}")
-    except Exception as e:
-        # Catch-all
-        raise HTTPException(status_code=500, detail=f"Unexpected error: {e}")
-
 @app.get("/price")
 def get_eth_price():
     """
     Endpoint to get current ETH/USD price.
     """
-    price = get_eth_price_service()
+    price = get_eth_price()
     return {"price": price}
 
 
@@ -62,7 +40,7 @@ def make_trade(req: TradeRequest):
     if req.side not in ["BUY", "SELL"]:
         raise HTTPException(status_code=400, detail="Invalid side")
     
-    price = get_eth_price_service()
+    price = get_eth_price()
     notional = req.amount * price
 
     if notional > 2000:
@@ -100,3 +78,17 @@ def make_trade(req: TradeRequest):
         "balance": {"usdc": balance.usdc, "eth": balance.eth},
         "trade": {"side": req.side, "amount": req.amount, "price": price, "notional": notional},
     }
+
+@app.get("/balances")
+def get_balances():
+    db = SessionLocal()
+    try:
+        balance = db.query(Balance).first()
+        if not balance:
+            balance = Balance(usdc=10000.0, eth=0.0)
+            db.add(balance)
+            db.commit()
+            db.refresh(balance)
+        return {"usdc": balance.usdc, "eth": balance.eth}
+    finally:
+        db.close()

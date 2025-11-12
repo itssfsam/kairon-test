@@ -10,11 +10,6 @@ export default function Home() {
       <div className="w-full max-w-md space-y-4">
         <Price />
         <Trade />
-        <div className="p-4 bg-white shadow rounded">
-          <h2 className="text-lg font-semibold mb-2">Balances</h2>
-          <p>USDC: 10,000</p>
-          <p>ETH: 0</p>
-        </div>
 
         <div className="p-4 bg-white shadow rounded">
           <h2 className="text-lg font-semibold mb-2">Trade History</h2>
