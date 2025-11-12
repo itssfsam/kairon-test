@@ -1,5 +1,5 @@
-# Kairon-Test
-ETH Price Watch + Paper Trades
+# Kairon Test
+Take home assignment for Friday
 
 ---
 
