@@ -11,12 +11,6 @@ export default function Home() {
       <div className="w-full max-w-md space-y-4">
         <Price />
         <Trade />
-
-        <div className="p-4 bg-white shadow rounded">
-          <h2 className="text-lg font-semibold mb-2">Trade History</h2>
-          <p className="text-gray-500 italic">No trades yet</p>
-          <DownloadTradesButton />
-        </div>
       </div>
     </main>
   );
