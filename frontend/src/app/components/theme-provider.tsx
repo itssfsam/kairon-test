@@ -51,7 +51,13 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       <div
-        className={`min-h-screen ${theme === Theme.DARK ? "bg-gray-900 text-black" : "bg-purple-50 text-gray-900"}`}
+        className={`min-h-screen bg-cover bg-center transition-all duration-500`}
+        style={{
+          backgroundImage:
+            theme === Theme.DARK
+              ? "url('/dark.jpg')"
+              : "url('/light.jpg')",
+        }}
       >
         {children}
       </div>

@@ -38,7 +38,7 @@ export default function Price() {
 
     return (
 
-        <div className="p-4 bg-white shadow rounded flex flex-col min-h-[20rem]">
+        <div className="p-4 bg-white/30 shadow rounded flex flex-col min-h-[20rem] backdrop-blur-md border border-white/20">
             <div className="flex justify-between items-center m-4">
                 <h2 className="text-lg font-semibold">ETH/USD</h2>
                 {lastUpdated && (

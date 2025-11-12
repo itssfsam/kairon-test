@@ -1,7 +1,6 @@
 import Price from "./components/price-component";
 import Header from "./components/page-header";
 import Trade from "./components/trade-component";
-import DownloadTradesButton from "./components/download-trades-button";
 
 export default function Home() {
   return (
