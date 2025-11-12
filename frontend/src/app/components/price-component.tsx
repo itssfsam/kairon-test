@@ -31,7 +31,7 @@ export default function Price() {
         fetchPrice();
         // Encountered rate limit error on 5000
         // Also increased to 10000 for the sake of sparkline calculation
-        const interval = setInterval(fetchPrice, 1000);
+        const interval = setInterval(fetchPrice, 10000);
         return () => clearInterval(interval);
     }, []);
 

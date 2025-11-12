@@ -4,6 +4,9 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import datetime
 from services import get_eth_price
+import csv
+from io import StringIO
+from fastapi.responses import StreamingResponse
 
 class TradeRequest(BaseModel):
     side: str
@@ -90,5 +93,34 @@ def get_balances():
             db.commit()
             db.refresh(balance)
         return {"usdc": balance.usdc, "eth": balance.eth}
+    finally:
+        db.close()
+
+
+@app.get("/trades/export-csv")
+def export_trades_csv():
+    db = SessionLocal()
+    try:
+        trades = db.query(Trade).all()
+        
+        # Create CSV in memory
+        output = StringIO()
+        writer = csv.writer(output)
+        
+        # Header
+        writer.writerow(["id", "side", "amount", "price", "notional", "timestamp"])
+        
+        # Rows
+        for t in trades:
+            writer.writerow([t.id, t.side, t.amount, t.price, t.notional, t.timestamp])
+        
+        output.seek(0)
+        
+        # Return as CSV file
+        return StreamingResponse(
+            output,
+            media_type="text/csv",
+            headers={"Content-Disposition": "attachment; filename=trades.csv"}
+        )
     finally:
         db.close()

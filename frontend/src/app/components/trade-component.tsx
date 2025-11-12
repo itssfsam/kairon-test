@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { useState } from "react";
+import DownloadTradesButton from "./download-trades-button";
 
 interface TradeBlockProps {
   apiUrl?: string;
@@ -42,7 +43,7 @@ export default function TradeBlock({ apiUrl = "http://localhost:8000/trade" }: T
   return (
     <React.Fragment>
       <div className="p-4 bg-white shadow rounded w-full max-w-md mx-auto">
-        <h2 className="text-lg font-semibold mb-2">Trade</h2>
+        <h2 className="text-lg font-semibold mb-2">Trade</h2><DownloadTradesButton></DownloadTradesButton>
 
         {error && <p className="text-red-500 text-sm mb-1">{error}</p>}
 
