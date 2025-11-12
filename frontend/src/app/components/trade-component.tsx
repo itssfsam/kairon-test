@@ -47,7 +47,6 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
     }
   });
 
-  // Persist states
   useEffect(() => localStorage.setItem("amount", amount), [amount]);
   useEffect(() => {
     if (error === null) localStorage.removeItem("error");
@@ -91,7 +90,6 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
     }
   };
 
-  // **Common classes for all cards**
   const cardClasses =
     `p-4 rounded flex flex-col shadow backdrop-blur-md transition-colors duration-300
      ${theme === "dark"
@@ -101,7 +99,6 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
 
   return (
     <React.Fragment>
-      {/* Trade Form */}
       <div className="flex gap-4 flex-col md:flex-row">
         <div className={`${cardClasses} w-full`}>
           <h2 className="text-lg font-semibold mb-2">Trade</h2>
@@ -132,7 +129,6 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
           </div>
         </div>
 
-        {/* Balances */}
         <div className={`${cardClasses} w-full`}>
           <h2 className="text-lg font-semibold mb-2">Balances</h2>
           <p>USDC: ${balance.usdc.toFixed(2)}</p>
@@ -140,7 +136,6 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
         </div>
       </div>
 
-      {/* Trade History */}
       <div className={`${cardClasses} w-full mt-4`}>
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-semibold mb-2">Trade History</h2>

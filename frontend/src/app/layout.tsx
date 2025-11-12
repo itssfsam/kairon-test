@@ -22,7 +22,6 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ThemeProvider>{children}<ThemeToggleButton /></ThemeProvider>
-
       </body>
     </html>
   );
