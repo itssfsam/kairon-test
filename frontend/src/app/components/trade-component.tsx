@@ -96,7 +96,8 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
   return (
     <React.Fragment>
       {/* Trade Form */}
-      <div className="p-4 bg-white shadow rounded w-full max-w-md mx-auto mb-4">
+      <div className="flex gap-4">
+      <div className="p-4 bg-white shadow rounded w-full mx-auto mb-4">
         <h2 className="text-lg font-semibold mb-2">Trade</h2>
         {error && <p className="text-red-500 text-sm mb-1">{error}</p>}
 
@@ -108,17 +109,17 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="ETH amount"
-            className="flex-1 px-3 py-2 text-sm focus:outline-none"
+            className="w-3/10 flex-1 px-3 py-2 text-sm focus:outline-none"
           />
           <button
             onClick={() => handleTrade("BUY")}
-            className="bg-purple-500 text-white px-4 py-2 text-sm hover:bg-purple-600 transition-all duration-300"
+            className="w-3/10 bg-purple-500 text-white px-4 py-2 text-sm hover:bg-purple-600 transition-all duration-300"
           >
             Buy
           </button>
           <button
             onClick={() => handleTrade("SELL")}
-            className="bg-pink-500 text-white px-4 py-2 text-sm hover:bg-pink-600 transition-all duration-300"
+            className="w-3/10 bg-pink-500 text-white px-4 py-2 text-sm hover:bg-pink-600 transition-all duration-300"
           >
             Sell
           </button>
@@ -126,15 +127,18 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
       </div>
 
       {/* Balances */}
-      <div className="p-4 bg-white shadow rounded w-full max-w-md mx-auto mb-4">
+      <div className="p-4 bg-white shadow rounded w-full mx-auto mb-4">
         <h2 className="text-lg font-semibold mb-2">Balances</h2>
         <p>USDC: ${balance.usdc.toFixed(2)}</p>
         <p>ETH: {balance.eth.toFixed(4)}</p>
       </div>
-
+</div>
       {/* Trade History */}
-      <div className="p-4 bg-white shadow rounded w-full max-w-md mx-auto">
+      <div className="p-4 bg-white shadow rounded w-full mx-auto">
+        <div className="flex justify-between items-center">
         <h2 className="text-lg font-semibold mb-2">Trade History</h2>
+          <DownloadTradesButton />
+        </div>
         {trades.length === 0 ? (
           <p className="text-gray-500 italic">No trades yet</p>
         ) : (
@@ -157,9 +161,6 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
             </tbody>
           </table>
         )}
-        <div className="mt-2">
-          <DownloadTradesButton />
-        </div>
       </div>
     </React.Fragment>
   );

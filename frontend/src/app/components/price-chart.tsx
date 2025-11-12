@@ -8,7 +8,7 @@ export default function PriceChart() {
   if (prices.length === 0) return <div>No data yet</div>;
 
   return (
-    <div className="w-32 h-16">
+    <div className="w-full h-full p-5">
       <Sparklines data={prices} limit={6} width={100} height={30}>
         <SparklinesLine color="blue" />
       </Sparklines>

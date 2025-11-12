@@ -32,7 +32,7 @@ interface ThemeProviderProps {
 
 // 6️⃣ Create ThemeProvider
 export default function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(Theme.DARK);
+  const [theme, setTheme] = useState<Theme>(localStorage.getItem("theme") as Theme | Theme.DARK);
 
   const toggleTheme = () =>
     setTheme((prev) => (prev === Theme.DARK ? Theme.LIGHT : Theme.DARK));

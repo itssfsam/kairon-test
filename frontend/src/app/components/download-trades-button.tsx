@@ -30,7 +30,7 @@ export default function DownloadTradesButton() {
         onClick={handleDownload}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
-        className="text-2xl p-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+        className="text-2xl p-2 rounded transition"
         aria-label="Download Trades CSV"
       >
         💾

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePriceStore } from "../store/use-price-store";
+import PriceChart from "./price-chart";
 
 export default function Price() {
     const [ethPrice, setEthPrice] = useState<number | null>(null);
@@ -36,8 +37,9 @@ export default function Price() {
     }, []);
 
     return (
-        <div className="p-4 bg-white shadow rounded">
-            <div className="flex justify-between items-center">
+
+        <div className="p-4 bg-white shadow rounded flex flex-col min-h-[20rem]">
+            <div className="flex justify-between items-center m-4">
                 <h2 className="text-lg font-semibold">ETH/USD</h2>
                 {lastUpdated && (
                     <span className="text-xs text-gray-500">
@@ -47,12 +49,13 @@ export default function Price() {
             </div>
 
             {ethPrice ? (
-                <p className="text-2xl font-mono">${ethPrice.toFixed(2)}</p>
+                <p className="text-2xl font-mono m-4">${ethPrice.toFixed(2)}</p>
             ) : error ? (
                 <p className="text-red-500">{error}</p>
             ) : (
                 <p>Loading...</p>
             )}
+            <PriceChart />
         </div>
     );
 }
