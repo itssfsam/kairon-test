@@ -12,7 +12,7 @@ export default function Price() {
     useEffect(() => {
         const fetchPrice = async () => {
             try {
-                const res = await fetch("http://localhost:8000/price");
+                const res = await fetch("http://0.0.0.0:8000/price");
                 const data = await res.json();
                 if (data.price) {
                     setEthPrice(data.price);

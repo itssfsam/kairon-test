@@ -8,9 +8,10 @@ ETH Price Watch + Paper Trades
 - **Storage:** SQLite
 
 # Running Instructions:
+**traditional and docker possible**
+to run without docker:
 - in the frontend folder: `npm install && npm run dev`
 - in the backend folder: `pip3 install -r requirements.txt && uvicorn main:app --host 0.0.0.0 --reload`
-
-
-# Dockerized Version
-in case of inconsistencies, (dockerized version)[https://github.com/itssfsam/kairon-test-dockerized] is also available
+to run with docker:
+- `docker compose up`
+- navigate to `0.0.0.0:3000`

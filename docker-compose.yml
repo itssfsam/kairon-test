@@ -1,0 +1,16 @@
+services:
+  backend:
+    build: ./backend
+    container_name: fastapi-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/app:/app/app
+
+  frontend:
+    build: ./frontend
+    container_name: next-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
