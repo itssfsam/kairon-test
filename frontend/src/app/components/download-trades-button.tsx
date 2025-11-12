@@ -6,7 +6,7 @@ export default function DownloadTradesButton() {
 
   const handleDownload = async () => {
     try {
-      const res = await fetch("http://0.0.0.0:8000/trades/export-csv");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_K_API_URL}/trades/export-csv`);
       if (!res.ok) throw new Error("Failed to download CSV");
 
       const blob = await res.blob();

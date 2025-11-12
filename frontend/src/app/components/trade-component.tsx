@@ -13,7 +13,7 @@ interface Trade {
   timestamp: string;
 }
 
-export default function TradeBlock({ apiUrl = "http://0.0.0.0:8000/trade" }: TradeBlockProps) {
+export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_URL}/trade` }: TradeBlockProps) {
   const [amount, setAmount] = useState<string>(() => {
     try {
       return localStorage.getItem("amount") || "";

@@ -12,7 +12,7 @@ export default function Price() {
     useEffect(() => {
         const fetchPrice = async () => {
             try {
-                const res = await fetch("http://0.0.0.0:8000/price");
+                const res = await fetch(`${process.env.NEXT_PUBLIC_K_API_URL}/price`);
                 const data = await res.json();
                 if (data.price) {
                     setEthPrice(data.price);
