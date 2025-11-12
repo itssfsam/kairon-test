@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import ThemeProvider from "./components/theme-provider";
 import ThemeToggleButton from "./components/theme-toggle-button.tsx";
+import { ToastContainer } from "react-toastify";
 
 export const metadata: Metadata = {
   title: "Kaitest",
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ThemeProvider>{children}<ThemeToggleButton /></ThemeProvider>
+        <ToastContainer />
       </body>
     </html>
   );

@@ -23,6 +23,7 @@ if __name__ == "__main__":
     # --- Test 2: buy exceeds limit ---
     try:
         resp = requests.post(f"{BASE_URL}/trade", json={"side": "BUY", "amount": 1})
+        # TODO: fix the test and figure out the problem
         success = resp.status_code == 400 and resp.json().get("detail") == "Trade exceeds $2,000 limit"
         print_result("Test 2: BUY exceeds $2k", success)
     except Exception as e:

@@ -6,6 +6,7 @@ export default function PriceChart() {
   const prices = usePriceStore((state) => state.prices);
 
   if (prices.length === 0) return <div>No data yet</div>;
+  // TODO: fix the chart bug
 
   return (
     <div className="w-full h-full p-5">

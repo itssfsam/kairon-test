@@ -56,6 +56,7 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
   useEffect(() => localStorage.setItem("trades", JSON.stringify(trades)), [trades]);
 
   const handleTrade = async (side: "BUY" | "SELL") => {
+    // TODO: calculate notional and replace button text and color for confirmation 
     const num = parseFloat(amount);
     if (isNaN(num) || num <= 0) {
       setError("Enter a valid ETH amount");

@@ -3,10 +3,10 @@ import Header from "./components/page-header";
 import Trade from "./components/trade-component";
 
 export default function Home() {
+  // TODO: improve the general UI
   return (
     <main className="flex flex-col items-center p-8 mb-2">
       <Header></Header>
-
       <div className="w-full max-w-7xl flex gap-4 mt-4">
         <div className="w-1/3">
           <Price />
