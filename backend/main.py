@@ -19,6 +19,7 @@ app = FastAPI()
 # CORS
 origins = [
     "http://localhost:3000",
+    "http://0.0.0.0:3000",
 ]
 
 app.add_middleware(
@@ -82,41 +83,19 @@ def make_trade(req: TradeRequest):
         "trade": {"side": req.side, "amount": req.amount, "price": price, "notional": notional},
     }
 
-@app.get("/balances")
-def get_balances():
-    db = SessionLocal()
-    try:
-        balance = db.query(Balance).first()
-        if not balance:
-            balance = Balance(usdc=10000.0, eth=0.0)
-            db.add(balance)
-            db.commit()
-            db.refresh(balance)
-        return {"usdc": balance.usdc, "eth": balance.eth}
-    finally:
-        db.close()
-
-
 @app.get("/trades/export-csv")
 def export_trades_csv():
     db = SessionLocal()
     try:
         trades = db.query(Trade).all()
-        
-        # Create CSV in memory
         output = StringIO()
         writer = csv.writer(output)
-        
-        # Header
         writer.writerow(["id", "side", "amount", "price", "notional", "timestamp"])
         
-        # Rows
         for t in trades:
             writer.writerow([t.id, t.side, t.amount, t.price, t.notional, t.timestamp])
         
         output.seek(0)
-        
-        # Return as CSV file
         return StreamingResponse(
             output,
             media_type="text/csv",
