@@ -43,7 +43,7 @@ export default function TradeBlock({ apiUrl = "http://localhost:8000/trade" }: T
   return (
     <React.Fragment>
       <div className="p-4 bg-white shadow rounded w-full max-w-md mx-auto">
-        <h2 className="text-lg font-semibold mb-2">Trade</h2><DownloadTradesButton></DownloadTradesButton>
+        <h2 className="text-lg font-semibold mb-2">Trade</h2>
 
         {error && <p className="text-red-500 text-sm mb-1">{error}</p>}
 
