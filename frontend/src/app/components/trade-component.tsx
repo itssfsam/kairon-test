@@ -1,16 +1,40 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
-import DownloadTradesButton from "./download-trades-button";
 
 interface TradeBlockProps {
   apiUrl?: string;
 }
 
 export default function TradeBlock({ apiUrl = "http://localhost:8000/trade" }: TradeBlockProps) {
-  const [amount, setAmount] = useState<string>("");
-  const [error, setError] = useState<string | null>(null);
-  const [balance, setBalance] = useState({ usdc: 10000, eth: 0 });
+  const [amount, setAmount] = useState<string>(() => {
+    return localStorage.getItem("amount") || "";
+  });
+
+  const [error, setError] = useState<string | null>(() => {
+    return localStorage.getItem("error") || null;
+  });
+
+  const [balance, setBalance] = useState<{ usdc: number; eth: number }>(() => {
+    const saved = localStorage.getItem("balance");
+    return saved ? JSON.parse(saved) : { usdc: 10000, eth: 0 };
+  });
+
+  useEffect(() => {
+    localStorage.setItem("amount", amount);
+  }, [amount]);
+
+  useEffect(() => {
+    if (error === null) {
+      localStorage.removeItem("error");
+    } else {
+      localStorage.setItem("error", error);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    localStorage.setItem("balance", JSON.stringify(balance));
+  }, [balance]);
 
   const handleTrade = async (side: "BUY" | "SELL") => {
     const num = parseFloat(amount);
