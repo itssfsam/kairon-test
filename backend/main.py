@@ -27,7 +27,7 @@ app.add_middleware(
 )
 
 @app.get("/price")
-def get_eth_price():
+def eth_price():
     """
     Endpoint to get current ETH/USD price.
     """

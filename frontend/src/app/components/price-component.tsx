@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePriceStore } from "../store/use-price-store";
 
 export default function Price() {
     const [ethPrice, setEthPrice] = useState<number | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+    const recordPrice = usePriceStore((state) => state.recordPrice);
 
     useEffect(() => {
         const fetchPrice = async () => {
@@ -16,7 +18,9 @@ export default function Price() {
                     setEthPrice(data.price);
                     setLastUpdated(new Date());
                     setError(null);
+                    recordPrice(data.price ?? 0);
                 } else {
+                    recordPrice(0);
                     setError("Failed to get price");
                 }
             } catch (err) {

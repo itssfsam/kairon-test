@@ -5,7 +5,7 @@ COINGECKO_API = "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_c
 
 def get_eth_price() -> float:
     try:
-        resp = requests.get(COINGECKO_API, timeout=5)
+        resp = requests.get(COINGECKO_API, timeout=10)
         resp.raise_for_status()
         data = resp.json()
 
