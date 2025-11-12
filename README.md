@@ -8,7 +8,7 @@ Take home assignment for Friday
 - Frontend: Next.js + Tailwind CSS
   - Language: TypeScript
 - Backend: Python (FastAPI)
-- Database / Storage: SQLite
+- Database: SQLite
 
 ---
 
