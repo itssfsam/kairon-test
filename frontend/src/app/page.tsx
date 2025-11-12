@@ -4,7 +4,7 @@ import Trade from "./components/trade-component";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-purple-50 text-gray-900 flex flex-col items-center p-8 mb-2">
+    <main className="flex flex-col items-center p-8 mb-2">
       <Header></Header>
 
       <div className="w-full max-w-md space-y-4">

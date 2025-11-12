@@ -25,7 +25,7 @@ export default function Price() {
         };
 
         fetchPrice();
-        const interval = setInterval(fetchPrice, 5000);
+        const interval = setInterval(fetchPrice, 7000); // Encountered rate limit error on 5000
         return () => clearInterval(interval);
     }, []);
 
