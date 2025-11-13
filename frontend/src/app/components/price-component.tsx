@@ -5,10 +5,11 @@ import { usePriceStore } from "../store/use-price-store";
 import PriceChart from "./price-chart";
 
 export default function Price() {
-    const [ethPrice, setEthPrice] = useState<number | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
     const recordPrice = usePriceStore((state) => state.recordPrice);
+    const price = usePriceStore((state) => state.prices.at(-1) ?? 0);
+    const pricesDebug = usePriceStore((state) => state.prices);
 
     useEffect(() => {
         const fetchPrice = async () => {
@@ -16,10 +17,9 @@ export default function Price() {
                 const res = await fetch(`${process.env.NEXT_PUBLIC_K_API_URL}/price`);
                 const data = await res.json();
                 if (data.price) {
-                    setEthPrice(data.price);
                     setLastUpdated(new Date());
                     setError(null);
-                    recordPrice(data.price ?? 0);
+                    recordPrice(data.price);
                 } else {
                     recordPrice(0);
                     setError("Failed to get price");
@@ -42,14 +42,14 @@ export default function Price() {
             <div className="flex justify-between items-center m-4">
                 <h2 className="text-lg font-semibold">ETH/USD</h2>
                 {lastUpdated && (
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-white">
                         Last updated: {lastUpdated.toLocaleTimeString()}
                     </span>
                 )}
             </div>
 
-            {ethPrice ? (
-                <p className="text-2xl font-mono m-4">${ethPrice.toFixed(2)}</p>
+            {price ? (
+                <p className="text-2xl font-mono m-4">${price.toFixed(2)}</p>
             ) : error ? (
                 <p className="text-red-500">{error}</p>
             ) : (
