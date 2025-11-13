@@ -18,13 +18,7 @@ interface Trade {
 
 export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_URL}/trade` }: TradeBlockProps) {
   const { theme } = useTheme();
-  const [amount, setAmount] = useState<string>(() => {
-    try {
-      return localStorage.getItem("amount") || "";
-    } catch {
-      return "";
-    }
-  });
+  const [amount, setAmount] = useState<string>("");
   const [error, setError] = useState<string | null>(() => {
     try {
       return localStorage.getItem("error") || null;
@@ -50,7 +44,6 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
     }
   });
 
-  useEffect(() => localStorage.setItem("amount", amount), [amount]);
   useEffect(() => {
     if (error === null) localStorage.removeItem("error");
     else localStorage.setItem("error", error);

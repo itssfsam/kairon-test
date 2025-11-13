@@ -12,7 +12,7 @@ export default function Header() {
 
     const textGradient =
         theme === Theme.DARK
-            ? 'from-green-300 via-blue-500 to-purple-600 text-5xl font-black'
+            ? 'from-green-300 via-blue-500 to-purple-600 font-black'
             : 'from-purple-400 via-pink-500 to-red-500';
 
     return (
