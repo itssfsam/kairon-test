@@ -136,6 +136,10 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
       : "bg-white/50 border border-gray-100/10 text-gray-800"
     }`;
 
+  const buyButtonStyle = theme === Theme.DARK ? `w-1.5/10 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 bg-[length:200%_100%] bg-left text-white font-bold py-2 hover:bg-[position:-200%_0%] px-4 text-white px-4 py-2 text-sm hover:bg-purple-700 transition-all duration-300` : `w-1.5/10 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-[length:200%_100%] bg-left text-white font-bold py-2 hover:bg-[position:-200%_0%] px-4 text-white px-4 py-2 text-sm hover:bg-purple-700 transition-all duration-300`;
+
+  const sellButtonStyle = theme === Theme.DARK ? `w-1.5/10 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 bg-[length:200%_100%] bg-right text-white font-bold py-2 hover:bg-[position:-100%_100%] px-4 py-2 text-sm hover:bg-purple-700 transition-all duration-300` : `w-1.5/10 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-[length:200%_100%] bg-right text-white font-bold py-2 hover:bg-[position:-100%_100%] px-4 py-2 text-sm hover:bg-purple-700 transition-all duration-300`;
+
   return (
     <React.Fragment>
       <div className="flex gap-4 flex-col md:flex-row">
@@ -160,13 +164,13 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
             </div>
             <button
               onClick={() => handleTrade("BUY")}
-              className="w-1.5/10 bg-purple-500 text-white px-4 py-2 text-sm hover:bg-purple-600 transition-all duration-300"
+              className={`${buyButtonStyle}`}
             >
               Buy
             </button>
             <button
               onClick={() => handleTrade("SELL")}
-              className="w-1.5/10 bg-pink-500 text-white px-4 py-2 text-sm hover:bg-pink-600 transition-all duration-300"
+              className={`${sellButtonStyle}`}
             >
               Sell
             </button>
