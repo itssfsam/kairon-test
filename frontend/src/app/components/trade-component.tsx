@@ -4,19 +4,9 @@ import DownloadTradesButton from "./download-trades-button";
 import { Theme, useTheme } from "./theme-provider";
 import { toast } from "react-toastify";
 import { usePriceStore } from "../store/use-price-store";
+import { ITrade, ITradeBlockProps } from "./trade-component.interface";
 
-interface TradeBlockProps {
-  apiUrl?: string;
-}
-
-interface Trade {
-  id: string;
-  side: "BUY" | "SELL";
-  amount: number;
-  timestamp: string;
-}
-
-export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_URL}/trade` }: TradeBlockProps) {
+export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_URL}/trade` }: ITradeBlockProps) {
   const { theme } = useTheme();
   const [amount, setAmount] = useState<string>("");
   const [error, setError] = useState<string | null>(() => {
@@ -35,7 +25,7 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
       return { usdc: 10000, eth: 0 };
     }
   });
-  const [trades, setTrades] = useState<Trade[]>(() => {
+  const [trades, setTrades] = useState<ITrade[]>(() => {
     try {
       const saved = localStorage.getItem("trades");
       return saved ? JSON.parse(saved) : [];
@@ -106,7 +96,7 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
           theme: "light",
         });
 
-        const newTrade: Trade = {
+        const newTrade: ITrade = {
           id: Date.now().toString(),
           side,
           amount: num,
@@ -136,9 +126,11 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
       : "bg-white/50 border border-gray-100/10 text-gray-800"
     }`;
 
-  const buyButtonStyle = theme === Theme.DARK ? `w-1.5/10 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 bg-[length:200%_100%] bg-left text-white font-bold py-2 hover:bg-[position:-200%_0%] px-4 text-white px-4 py-2 text-sm hover:bg-purple-700 transition-all duration-300` : `w-1.5/10 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-[length:200%_100%] bg-left text-white font-bold py-2 hover:bg-[position:-200%_0%] px-4 text-white px-4 py-2 text-sm hover:bg-purple-700 transition-all duration-300`;
+  const sharedButtonStyle = `w-1.5/10 bg-gradient-to-r px-4 py-2 text-sm text-white font-bold duration-300 transition-all`
 
-  const sellButtonStyle = theme === Theme.DARK ? `w-1.5/10 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 bg-[length:200%_100%] bg-right text-white font-bold py-2 hover:bg-[position:-100%_100%] px-4 py-2 text-sm hover:bg-purple-700 transition-all duration-300` : `w-1.5/10 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-[length:200%_100%] bg-right text-white font-bold py-2 hover:bg-[position:-100%_100%] px-4 py-2 text-sm hover:bg-purple-700 transition-all duration-300`;
+  const buyButtonStyle = theme === Theme.DARK ? `from-green-300 via-blue-500 to-purple-600 bg-[length:200%_100%] bg-left hover:bg-[position:-200%_0%] hover:bg-purple-700` : `from-purple-400 via-pink-500 to-red-500 bg-[length:200%_100%] bg-left hover:bg-[position:-200%_0%] hover:bg-purple-700`;
+
+  const sellButtonStyle = theme === Theme.DARK ? `from-green-300 via-blue-500 to-purple-600 bg-[length:200%_100%] bg-right  hover:bg-[position:-100%_100%] hover:bg-purple-700` : `from-purple-400 via-pink-500 to-red-500 bg-[length:200%_100%] bg-right hover:bg-[position:-100%_100%] hover:bg-purple-700`;
 
   return (
     <React.Fragment>
@@ -164,13 +156,13 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
             </div>
             <button
               onClick={() => handleTrade("BUY")}
-              className={`${buyButtonStyle}`}
+              className={`${sharedButtonStyle} ${buyButtonStyle}`}
             >
               Buy
             </button>
             <button
               onClick={() => handleTrade("SELL")}
-              className={`${sellButtonStyle}`}
+              className={`${sharedButtonStyle} ${sellButtonStyle}`}
             >
               Sell
             </button>

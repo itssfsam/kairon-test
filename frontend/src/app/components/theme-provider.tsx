@@ -1,18 +1,14 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { IThemeContextType, IThemeProviderProps } from "./theme-provider.interface";
 
 export enum Theme {
   LIGHT = "light",
   DARK = "dark",
 }
 
-interface ThemeContextType {
-  theme: Theme;
-  toggleTheme: () => void;
-}
-
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+const ThemeContext = createContext<IThemeContextType | undefined>(undefined);
 
 export function useTheme() {
   const context = useContext(ThemeContext);
@@ -20,11 +16,7 @@ export function useTheme() {
   return context;
 }
 
-interface ThemeProviderProps {
-  children: ReactNode;
-}
-
-export default function ThemeProvider({ children }: ThemeProviderProps) {
+export default function ThemeProvider({ children }: IThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(() => {
     try {
       return localStorage.getItem("theme") as Theme | Theme.LIGHT
