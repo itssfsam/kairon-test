@@ -1,6 +1,6 @@
 "use client";
 
-import { useTheme } from "./theme-provider";
+import { Theme, useTheme } from "./theme-provider";
 
 export default function ThemeToggleButton() {
   const { theme, toggleTheme } = useTheme();
@@ -11,7 +11,7 @@ export default function ThemeToggleButton() {
       className="fixed bottom-4 right-4 p-2 rounded-full text-4xl hover:scale-200 transition-transform"
       aria-label="Toggle theme"
     >
-      {theme === "dark" ? "🌞" : "🌙"}
+      {theme === Theme.LIGHT ? "🌞" : "🌙"}
     </button>
   );
 }

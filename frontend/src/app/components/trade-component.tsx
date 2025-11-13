@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import DownloadTradesButton from "./download-trades-button";
 import { useTheme } from "./theme-provider";
+import { toast } from "react-toastify";
+import { usePriceStore } from "../store/use-price-store";
 
 interface TradeBlockProps {
   apiUrl?: string;
@@ -30,6 +32,7 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
       return null;
     }
   });
+  const [calculated, setCalculated] = useState<string>("0");
   const [balance, setBalance] = useState<{ usdc: number; eth: number }>(() => {
     try {
       const saved = localStorage.getItem("balance");
@@ -55,11 +58,22 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
   useEffect(() => localStorage.setItem("balance", JSON.stringify(balance)), [balance]);
   useEffect(() => localStorage.setItem("trades", JSON.stringify(trades)), [trades]);
 
+  const price = usePriceStore((state) => state.prices.at(-1) ?? 0);
+
   const handleTrade = async (side: "BUY" | "SELL") => {
-    // TODO: calculate notional and replace button text and color for confirmation 
     const num = parseFloat(amount);
     if (isNaN(num) || num <= 0) {
       setError("Enter a valid ETH amount");
+      toast.error("Enter a valid ETH amount", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       return;
     }
 
@@ -73,10 +87,31 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
 
       if (!res.ok) {
         setError(data.detail || "Trade failed");
+        toast.error(data.detail || "Trade failed", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       } else {
         setBalance(data.balance);
         setAmount("");
         setError(null);
+
+        toast.success(`Successful ${side} operation: ${num}`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
 
         const newTrade: Trade = {
           id: Date.now().toString(),
@@ -88,6 +123,16 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
       }
     } catch (err) {
       setError("Network error");
+      toast.error('Network error', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   };
 
@@ -95,7 +140,7 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
     `p-4 rounded flex flex-col shadow backdrop-blur-md transition-colors duration-300
      ${theme === "dark"
       ? "bg-gray-800/30 border border-gray-700/20 text-gray-100"
-      : "bg-white/30 border border-gray-200/20 text-gray-900"
+      : "bg-white/50 border border-gray-100/10 text-gray-800"
     }`;
 
   return (
@@ -103,30 +148,36 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
       <div className="flex gap-4 flex-col md:flex-row">
         <div className={`${cardClasses} w-full`}>
           <h2 className="text-lg font-semibold mb-2">Trade</h2>
-          {error && <p className="text-red-500 text-sm mb-1">{error}</p>}
-
           <div className="flex rounded overflow-hidden border border-gray-300 focus-within:ring-2 focus-within:ring-blue-500">
             <input
               type="number"
               step="0.0001"
               min="0"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={(e) => {
+                setAmount(e.target.value);
+                const c = parseFloat(e.target.value) * price;
+                setCalculated( isNaN(c)? 0 + "" : c + "")
+              }}
               placeholder="ETH amount"
               className="w-3/10 flex-1 px-3 py-2 text-sm focus:outline-none"
             />
+            <div className={`w-3/10 px-3 py-2 text-sm ${parseFloat(calculated) < 2000 ? "text-gray-600" : "text-red-600"}`}>
+              ≈ ${parseFloat(calculated).toFixed(2)}
+            </div>
             <button
               onClick={() => handleTrade("BUY")}
-              className="w-3/10 bg-purple-500 text-white px-4 py-2 text-sm hover:bg-purple-600 transition-all duration-300"
+              className="w-1.5/10 bg-purple-500 text-white px-4 py-2 text-sm hover:bg-purple-600 transition-all duration-300"
             >
               Buy
             </button>
             <button
               onClick={() => handleTrade("SELL")}
-              className="w-3/10 bg-pink-500 text-white px-4 py-2 text-sm hover:bg-pink-600 transition-all duration-300"
+              className="w-1.5/10 bg-pink-500 text-white px-4 py-2 text-sm hover:bg-pink-600 transition-all duration-300"
             >
               Sell
             </button>
+            
           </div>
         </div>
 

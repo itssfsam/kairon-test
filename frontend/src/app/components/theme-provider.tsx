@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
 
 export enum Theme {
   LIGHT = "light",
@@ -39,27 +38,6 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
     setTheme((prev) => (prev === Theme.DARK ? Theme.LIGHT : Theme.DARK));
 
   useEffect(() => {
-    // TODO: hook up these toasts to buy sell and errors
-    toast.success('🦄 Wow so easy!', {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-    toast.error('🦄 Wow so easy!', {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
     const storedTheme = localStorage.getItem("theme") as Theme | null;
     if (storedTheme) {
       setTheme(storedTheme);
