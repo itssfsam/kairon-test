@@ -7,7 +7,7 @@ COINGECKO_API = "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_c
 BINANCE_API = "https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT"
 
 try:
-    r = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
+    r = redis.Redis(host='0.0.0.0', port=6379, db=0, decode_responses=True)
 except:
     print("Redis unavailable! Exponential backoff not supported.")
 
