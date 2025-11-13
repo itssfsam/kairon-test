@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import DownloadTradesButton from "./download-trades-button";
-import { useTheme } from "./theme-provider";
+import { Theme, useTheme } from "./theme-provider";
 import { toast } from "react-toastify";
 import { usePriceStore } from "../store/use-price-store";
 
@@ -138,7 +138,7 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
 
   const cardClasses =
     `p-4 rounded flex flex-col shadow backdrop-blur-md transition-colors duration-300
-     ${theme === "dark"
+     ${theme === Theme.DARK
       ? "bg-gray-800/30 border border-gray-700/20 text-gray-100"
       : "bg-white/50 border border-gray-100/10 text-gray-800"
     }`;
@@ -157,7 +157,7 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
               onChange={(e) => {
                 setAmount(e.target.value);
                 const c = parseFloat(e.target.value) * price;
-                setCalculated( isNaN(c)? 0 + "" : c + "")
+                setCalculated(isNaN(c) ? 0 + "" : c + "")
               }}
               placeholder="ETH amount"
               className="w-3/10 flex-1 px-3 py-2 text-sm focus:outline-none"
@@ -177,7 +177,7 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
             >
               Sell
             </button>
-            
+
           </div>
         </div>
 

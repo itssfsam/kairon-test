@@ -41,26 +41,24 @@ def get_eth_price() -> float:
         attempt = int(retry_data.get("attempt", 0))
         last_try = float(retry_data.get("last_try", 0))
 
-        while attempt < MAX_RETRIES:
-            # Calculate backoff delay
-            backoff_time = BACKOFF_FACTOR ** attempt
-            now = time.time()
-            if now - last_try < backoff_time:
-                time_to_wait = backoff_time - (now - last_try)
-                print(f"Waiting {time_to_wait:.1f}s before retrying...")
-                time.sleep(time_to_wait)  # optional in sync code
+        backoff_time = BACKOFF_FACTOR ** attempt
+        now = time.time()
 
+        if now - last_try >= backoff_time:
             resp = requests.get(BINANCE_API, timeout=10)
             resp.raise_for_status()
             data = resp.json()
             price = float(data["price"])
             print("Binance: " + str(price))
 
-            # Clear retry info on success
             r.delete(redis_key)
             return price
+        else:
+            raise HTTPException(
+                status_code=429,
+                detail=f"Retrying too fast. Wait {backoff_time - (now - last_try):.1f}s"
+            )
     except (requests.RequestException, KeyError, ValueError) as e:
-        # Save retry state in Redis
         attempt += 1
         r.hset(redis_key, mapping={"attempt": attempt, "last_try": time.time()})
         if attempt >= MAX_RETRIES:
