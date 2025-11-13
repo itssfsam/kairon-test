@@ -1,4 +1,10 @@
 services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+
   backend:
     build: ./backend
     container_name: fastapi-backend
@@ -6,6 +12,11 @@ services:
       - "8000:8000"
     volumes:
       - ./backend/app:/app/app
+    depends_on:
+      - redis
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
 
   frontend:
     build: ./frontend
