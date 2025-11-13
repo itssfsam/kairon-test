@@ -1,8 +1,7 @@
-// src/store/usePriceStore.ts
 import { create } from "zustand";
 
 interface PriceState {
-  prices: number[]; // last 6 prices
+  prices: number[];
   lastUpdated: Date | null;
   recordPrice: (price: number) => void;
 }

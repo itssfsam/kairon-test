@@ -10,6 +10,7 @@ export default function Price() {
     const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
     const recordPrice = usePriceStore((state) => state.recordPrice);
     const price = usePriceStore((state) => state.prices.at(-1) ?? 0);
+    const previousPrice = usePriceStore((state) => state.prices.at(-2) ?? 0);
     const { theme } = useTheme();
 
     useEffect(() => {
@@ -50,7 +51,7 @@ export default function Price() {
             </div>
 
             {price ? (
-                <p className="text-2xl font-mono m-4">${price.toFixed(2)}</p>
+                <p className={`text-2xl font-mono mt-2 ${price >= previousPrice ? "text-green-500" : "text-red-500"}`}>${price.toFixed(2)}</p>
             ) : error ? (
                 <p className="text-red-500">{error}</p>
             ) : (

@@ -83,9 +83,10 @@ export default function TradeBlock({ apiUrl = `${process.env.NEXT_PUBLIC_K_API_U
       } else {
         setBalance(data.balance);
         setAmount("");
+        setCalculated(0 + "");
         setError(null);
 
-        toast.success(`Successful ${side} operation: ${num}`, {
+        toast.success(`Successful ${side} operation: ${num} ETH`, {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
